@@ -16,7 +16,7 @@ body {
 <script>
 
 var w = 800,
-    h = 500,
+    h = 400,
     temp=0;
  /*
 var dataroot="User.json";
@@ -38,50 +38,7 @@ var Week = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 var WeekComp = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
 
-/*
-var svg = d3.select("body").append("svg")
-    .attr("width", w+1000)
-    .attr("height", h);
-*/
-var div1 = d3.select("body").append("div")
-//.style("position","relative")
-.attr("width", w+500)
-.attr("height", h);
 
-var div2 = div1.append("div")
-.style("float","left")
-//.style("position","absolute")
-.attr("width", w)
-.attr("height", h);
-
-var div3 = div1.append("div")
-.attr("id","div3")
-//.style("position","absolute")
-.style("left",w)
-.attr("width", 500)
-.attr("height", h);
-
-var svg = div2.append("svg")
-.attr("width", w)
-.attr("height", h);
-
-var subsvg = d3.select("body").append("svg")
-.attr("width", 300)
-.attr("height", 1);
-
-var blanksvg = d3.select("body").append("svg")
-.attr("width", 10000)
-.attr("height", 1);
-
-var subsvg2 = d3.select("body").append("svg")
-.attr("width", w+160)
-.attr("height", 250);
-
-var subsvg3 = d3.select("body").append("svg")
-.attr("width", w+160)
-.attr("height", h)
-.append("g")
-.attr("transform", "translate( 50, 0 )");
 
 function max(a,b) {
     if (a >= b)
@@ -101,8 +58,8 @@ var lineData = [ { "x": 0,   "y": 0},  { "x": 1,  "y": 0},{ "x": 2,  "y": 0}, { 
     //console.log("%d",lineData[4].x);
     
 var lineFunction = d3.svg.line()
-    .x(function(d) { return 50+30 * d.x; })
-    .y(function(d) { return h - 200 - 10 * d.y; })
+    .x(function(d) { return 15+20 * d.x; })
+    .y(function(d) { return h - 175 - 7.5 * d.y; })
     .interpolate("basis");
     
 
@@ -115,7 +72,54 @@ for (var i = 0; i < arr.length; i++) {
 console.log(result[0].name);
 */
 
-d3.csv("weibo0.csv", function(d){
+function Draw(path){
+	   /*
+var svg = d3.select("body").append("svg")
+    .attr("width", w+1000)
+    .attr("height", h);
+*/
+var div1 = d3.select("body").append("div").attr("id","mainDiv")
+//.style("position","relative")
+.attr("width", w+500)
+.attr("height", h);
+
+var div2 = div1.append("div")
+.style("float","left")
+//.style("position","absolute")
+.attr("width", w)
+.attr("height", h);
+
+var div3 = div1.append("div")
+.attr("id","div3")
+//.style("position","absolute")
+.style("left",w)
+.attr("width", 500)
+.attr("height", h);
+
+var svg = div2.append("svg")
+.attr("id","main_svg")
+.attr("width", w)
+.attr("height", h);
+
+/*var subsvg = d3.select("body").append("svg").attr("id","subsvg")
+.attr("width", 300)
+.attr("height", 1);
+*/
+var blanksvg = d3.select("body").append("svg").attr("id","blanksvg")
+.attr("width", 10000)
+.attr("height", 1);
+
+var subsvg2 = d3.select("body").append("svg").attr("id","subsvg2")
+.attr("width", 600)
+.attr("height", 275);
+
+var subsvg3 = d3.select("body").append("svg").attr("id","subsvg3")
+.attr("width", 700)
+.attr("height", 275)
+.append("g")
+.attr("transform", "translate( 50, 0 )");
+
+		d3.csv(path, function(d){
        return {
        0: "" +d.User,
        1: +d.cntFollows,
@@ -210,7 +214,7 @@ d3.csv("weibo0.csv", function(d){
        //console.log("%s",d[4][5]);
        
        
-       console.log(container);
+       //console.log(container);
        
        svg.selectAll("circle-post")
        .data(container)
@@ -223,6 +227,13 @@ d3.csv("weibo0.csv", function(d){
        .attr("r",function(d,i) {
              return 5 + Math.log(d.cntForward+d.cntComment+d.cntLike);})
        .attr("fill",function(d,i){if (d.O_timestamp >0) {cnt++; cnt_P++; return "blue";} else {cnt++; cnt_O++; return "yellow";}})
+	   .attr("id","post")
+	   .attr("week",function(d){
+		   return new Date(d.P_time.substring(0,10)).getDay();
+	   })
+        .attr("hour",function(d){
+                     return parseInt(d.P_time.substring(11,13));
+                     })
        .on("mouseover", function(d,i) {
            
            d3.select(this)
@@ -230,7 +241,7 @@ d3.csv("weibo0.csv", function(d){
                  //console.log("%s",d.Offset);
                  return 5 + 1.5*Math.log(d.cntForward+d.cntComment+d.cntLike);});
            
-           $("#dis_time").html("<p id='dis_time'><font size='32' font color='black' face='Edwardian Script ITC'>"+d.P_time+"</font></p>");
+           $("#dis_time").html("<p id='dis_time'><font size='32' font color='black' face='Arial'>"+d.P_time+"</font></p>");
            $("#dis_content").html("<p id='dis_content'><font color='black' face='Arial'>"+d.Content+"</font></p>");
            $("#dis_Ocontent").html("<p id='dis_Ocontent'><font color='black' face='Arial'>"+d.O_Content+"</font></p>");
            $("#dis_url").html("<a id='dis_url' href='"+d.postURL+"'><font color='black' face='Arial'>"+d.postURL+"</font></a>");
@@ -261,7 +272,7 @@ d3.csv("weibo0.csv", function(d){
        */
        
        
-       $("#div3").append("<p id='dis_time'><font size='32' font color='black' face='Edwardian Script ITC'>"+container[d.length-1].P_time+"</font></p>");
+       $("#div3").append("<p id='dis_time'><font size='32' font color='black' face='Arial'>"+container[d.length-1].P_time+"</font></p>");
        
        /*var dis_time = div3.append("svg").append("text")
        .attr("fill", "blue")
@@ -316,6 +327,7 @@ d3.csv("weibo0.csv", function(d){
        .text(container[d.length-1].userEnd);*/
        
        svg.append("rect")
+	   .attr("id","rect_tweet")
        .attr("x", 100)
        .attr("y", (h-2*r)/2)
        .attr("width", 30)
@@ -328,13 +340,14 @@ d3.csv("weibo0.csv", function(d){
        .attr("text-anchor", "middle")
        .text("Tweet");
        
-       svg.append("text").attr("font-family","Georgia")
+       svg.append("text").attr("id","text_tweet").attr("font-family","Georgia")
        .attr("x",115)
        .attr("y",(h-2*r)/2+20)
        .attr("text-anchor", "middle")
        .text(Math.round(100*cnt_O/cnt)+"%");
        
        svg.append("rect")
+	   .attr("id","rect_retweet")
        .attr("x", 100)
        .attr("y", (h-2*r)/2+cnt_O/cnt*2*r)
        .attr("width", 30)
@@ -348,7 +361,7 @@ d3.csv("weibo0.csv", function(d){
        .attr("fill", "black")
        .text("Retweet");
        
-       svg.append("text").attr("font-family","Georgia")
+       svg.append("text").attr("id","text_retweet").attr("font-family","Georgia")
        .attr("x",115)
        .attr("y",(h+2*r)/2-10)
        .attr("text-anchor", "middle")
@@ -357,43 +370,43 @@ d3.csv("weibo0.csv", function(d){
        
        subsvg2.append("text")
        .attr("fill", "black")
-       .attr("font-size", "50px")
+       .attr("font-size", "40px")
        .attr("font-width", "2px")
        .attr("font-family", "Edwardian Script ITC")
-       .attr("x",50).attr("y",50)
+       .attr("x",35).attr("y",50)
        .text("Week");
        
        var weekname = subsvg2.append("text")
        .attr("fill", "black")
-       .attr("font-size", "36px")
+       .attr("font-size", "30px")
        .attr("font-width", "2px")
        .attr("font-family", "Edwardian Script ITC")
-       .attr("x",650).attr("y",50)
+       .attr("x",425).attr("y",75)
        .text("Sunday");
        
        
        var weekdata = subsvg2.append("text")
        .attr("fill", "black")
-       .attr("font-size", "96px")
+       .attr("font-size", "72px")
        .attr("font-width", "2px")
        .attr("font-family", "Arial")
-       .attr("x",675).attr("y",150)
+       .attr("x",450).attr("y",150)
        .text(byWeek[0]);
        
        var weekdataPct = subsvg2.append("text")
        .attr("fill", "black")
-       .attr("font-size", "20px")
+       .attr("font-size", "24px")
        .attr("font-width", "2px")
        .attr("font-family", "Arial")
-       .attr("x",680).attr("y",180)
+       .attr("x",425).attr("y",200)
        .text((byWeek[0]/cnt*100).toFixed(2)+"%");
 
        subsvg2.append("text")
        .attr("fill", "black")
-       .attr("font-size", "36px")
+       .attr("font-size", "30px")
        .attr("font-width", "2px")
-       .attr("font-family", "Edwardian Script ITC")
-       .attr("x",780).attr("y",175)
+       .attr("font-family", "Arial")
+       .attr("x",515).attr("y",200)
        .text("posts");
        
        subsvg2.selectAll("rect-week")
@@ -401,30 +414,65 @@ d3.csv("weibo0.csv", function(d){
        .enter()
        .append("rect")
        .attr("x", function(d, i) {
-             return 100+i * 80;
+             return 50+i * 55;
              })
        .attr("y", function(d) {
-             return h- 300 - d/cnt*500 ;
+             return h- 200 - d/cnt*500 ;
              })
-       .attr("width", 35)
+       .attr("width", 30)
+	   .attr("slctd",0)
        .attr("height", function(d) {
              return d/cnt*500 ;
              })
        .attr("fill", "orange")
-       .on("mouseover", function(i,d) {
-           d3.select(this)
-           .attr("fill", "purple");
-           
-           weekname.transition().duration(75).text(WeekComp[d]);
-           weekdata.transition().duration(75).text(i);
-           weekdataPct.transition().duration(75).text((i/cnt*100).toFixed(2)+"%");
-           })
-       .on("mouseout", function() {
-           d3.select(this)
-           .transition()
-           .duration(150)
-           .attr("fill", "orange");
-           });
+       .on("click",function(d,i){
+           weekname.transition().duration(75).text(WeekComp[i]);
+           weekdata.transition().duration(75).text(d);
+           weekdataPct.transition().duration(75).text((d/cnt*100).toFixed(2)+"%");
+			if ($(this).attr("slctd")==1)
+			{
+				$(this).attr("slctd",0);
+                $(this).attr("fill","orange");
+				$("circle[id=post]").attr("opacity",1);
+				var tweet=$("circle[fill=yellow][opacity=1]").length;
+				var retweet=$("circle[fill=blue][opacity=1]").length;
+				d3.select("#text_tweet").transition().duration(75).text(Math.round((tweet/(tweet+retweet))*100)+"%");
+				d3.select("#text_retweet").transition().duration(75).text(Math.round((retweet/(tweet+retweet))*100)+"%");
+				d3.select("#rect_tweet").transition().duration(75).attr("height",function(){
+					var tmp=parseFloat((tweet/(tweet+retweet))*2*r);
+					console.log(tmp);
+					return tmp;
+				});
+				d3.select("#rect_retweet").attr("y",function(){
+					return (h-2*r)/2+(tweet/(tweet+retweet))*2*r;
+				});
+				d3.select("#rect_retweet").attr("height",function(){
+					return parseFloat((retweet/(tweet+retweet))*2*r);
+				});
+				return;
+			}
+			$("rect[slctd=1]").attr("slctd",0);
+            $("rect[fill=purple]").attr("fill","orange");
+            $(this).attr("fill","purple");
+			$(this).attr("slctd",1);
+			$("circle[id=post]").attr("opacity",1);
+			$("circle[id=post][week!="+i+"]").attr("opacity",0.2);
+			var tweet=$("circle[fill=yellow][opacity=1]").length;
+			var retweet=$("circle[fill=blue][opacity=1]").length;
+			d3.select("#text_tweet").transition().duration(75).text(Math.round((tweet/(tweet+retweet))*100)+"%");
+			d3.select("#text_retweet").transition().duration(75).text(Math.round((retweet/(tweet+retweet))*100)+"%");
+			d3.select("#rect_tweet").transition().duration(75).attr("height",function(){
+				var tmp=parseFloat((tweet/(tweet+retweet))*2*r);
+				console.log(tmp);
+				return tmp;
+			});
+			d3.select("#rect_retweet").attr("y",function(){
+				return (h-2*r)/2+(tweet/(tweet+retweet))*2*r;
+			});
+			d3.select("#rect_retweet").attr("height",function(){
+				return parseFloat((retweet/(tweet+retweet))*2*r);
+			});
+		});
        
        subsvg2.selectAll("text-week")
        .data(Week)
@@ -438,10 +486,10 @@ d3.csv("weibo0.csv", function(d){
        .attr("font-size", "11px")
        .attr("font-family", "sans-serif")
        .attr("x", function(d, i) {
-             return 100+i * 80 +18;
+             return 50+i * 55 +15;
              })
        .attr("y", function(d) {
-             return h-285;
+             return h-185;
              });
        
        for (var i=0; i<24; i++){
@@ -452,7 +500,7 @@ d3.csv("weibo0.csv", function(d){
        
        subsvg3.append("text")
        .attr("fill", "black")
-       .attr("font-size", "50px")
+       .attr("font-size", "40px")
        .attr("font-width", "2px")
        .attr("font-family", "Edwardian Script ITC")
        .attr("x",0).attr("y",50)
@@ -470,64 +518,131 @@ d3.csv("weibo0.csv", function(d){
        .enter()
        .append("circle")
        .attr("cx", function(d, i) {
-             return 50+30 * i;})
+             return 15+20 * i;})
        .attr("cy", function(d,i) {
-             return h - 200 - 1000 * (byHour[i]/cnt);})
+             return h - 175 - 750 * (byHour[i]/cnt);})
        .attr("r",function(d,i) {
              return 7;})
        .attr("fill","purple")
+       .attr("slctd",0)
        .attr("stroke", "black")
        .attr("stroke-width", "2")
-       .on("mouseover", function(i,d) {
-           d3.select(this)
-           .attr("fill", "orange");
-           
-           hourname.transition().duration(75).text(d+":00-"+d+":59");
-           hourdata.transition().duration(75).text(i);
-           hourdataPct.transition().duration(75).text((i/cnt*100).toFixed(2)+"%");
+       
+               .on("click",function(d,i){
+                   hourname.transition().duration(75).text(i+":00-"+i+":59");
+                   hourdata.transition().duration(75).text(d);
+                   hourdataPct.transition().duration(75).text((d/cnt*100).toFixed(2)+"%");
+                   if ($(this).attr("slctd")==1)
+                   {
+                   $(this).attr("slctd",0);
+                   $(this).attr("fill","purple");
+                   $("circle[id=post]").attr("opacity",1);
+                   var tweet=$("circle[fill=yellow][opacity=1]").length;
+                   var retweet=$("circle[fill=blue][opacity=1]").length;
+                   d3.select("#text_tweet").transition().duration(75).text(Math.round((tweet/(tweet+retweet))*100)+"%");
+                   d3.select("#text_retweet").transition().duration(75).text(Math.round((retweet/(tweet+retweet))*100)+"%");
+                   d3.select("#rect_tweet").transition().duration(75).attr("height",function(){
+                                                                           var tmp=parseFloat((tweet/(tweet+retweet))*2*r);
+                                                                           console.log(tmp);
+                                                                           return tmp;
+                                                                           });
+                   d3.select("#rect_retweet").attr("y",function(){
+                                                   return (h-2*r)/2+(tweet/(tweet+retweet))*2*r;
+                                                   });
+                   d3.select("#rect_retweet").attr("height",function(){
+                                                   return parseFloat((retweet/(tweet+retweet))*2*r);
+                                                   });
+                   return;
+                   }
+                   $("circle[slctd=1]").attr("slctd",0);
+                   $("circle[fill=orange]").attr("fill","purple");
+                   $(this).attr("fill","orange");
+                   $(this).attr("slctd",1);
+                   $("circle[id=post]").attr("opacity",1);
+                   $("circle[id=post][hour!="+i+"]").attr("opacity",0.2);
+                   var tweet=$("circle[fill=yellow][opacity=1]").length;
+                   var retweet=$("circle[fill=blue][opacity=1]").length;
+                   d3.select("#text_tweet").transition().duration(75).text(Math.round((tweet/(tweet+retweet))*100)+"%");
+                   d3.select("#text_retweet").transition().duration(75).text(Math.round((retweet/(tweet+retweet))*100)+"%");
+                   d3.select("#rect_tweet").transition().duration(75).attr("height",function(){
+                                                                           var tmp=parseFloat((tweet/(tweet+retweet))*2*r);
+                                                                           console.log(tmp);
+                                                                           return tmp;
+                                                                           });
+                   d3.select("#rect_retweet").attr("y",function(){
+                                                   return (h-2*r)/2+(tweet/(tweet+retweet))*2*r;
+                                                   });
+                   d3.select("#rect_retweet").attr("height",function(){
+                                                   return parseFloat((retweet/(tweet+retweet))*2*r);
+                                                   });
+                   });
 
-           })
-       .on("mouseout", function() {
-           d3.select(this)
-           .transition()
-           .duration(150)
-           .attr("fill", "purple");
-           });
        
        var hourname = subsvg3.append("text")
        .attr("fill", "black")
-       .attr("font-size", "36px")
+       .attr("font-size", "30px")
        .attr("font-width", "2px")
        .attr("font-family", "Edwardian Script ITC")
-       .attr("x",600).attr("y",330)
+       .attr("x",475).attr("y",75)
        .text("0:00-0:59");
        
        
        var hourdata = subsvg3.append("text")
        .attr("fill", "black")
-       .attr("font-size", "96px")
+       .attr("font-size", "72px")
        .attr("font-width", "2px")
        .attr("font-family", "Arial")
-       .attr("x",625).attr("y",425)
+       .attr("x",500).attr("y",150)
        .text(byHour[0]);
        
        var hourdataPct = subsvg3.append("text")
        .attr("fill", "black")
-       .attr("font-size", "20px")
+       .attr("font-size", "24px")
        .attr("font-width", "2px")
        .attr("font-family", "Arial")
-       .attr("x",630).attr("y",450)
+       .attr("x",475).attr("y",200)
        .text((byHour[0]/cnt*100).toFixed(2)+"%");
 
        subsvg3.append("text")
        .attr("fill", "black")
-       .attr("font-size", "36px")
+       .attr("font-size", "30px")
        .attr("font-width", "2px")
-       .attr("font-family", "Edwardian Script ITC")
-       .attr("x",725).attr("y",445)
+       .attr("font-family", "Arial")
+       .attr("x",550).attr("y",200)
        .text("posts");
 
 });
+}
+
+$(document).ready(function(){
+
+	$("body").append("<div><select id='slc'></select><button id='btn_load'>Load</button></div>");
+	   for(var i=0;i<4;i++){
+		   $("#slc").append("<option value='weibo"+i+".csv'>weibo"+i+"</option>");
+	   }
+	   
+	$("#btn_load").click(function(){
+		var selected=$("option:selected");
+		if (selected.length>0)
+		{
+			var path=selected[0].value;
+			container=[];
+			byHour = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+			byWeek = [0,0,0,0,0,0,0];
+			d3.select("#mainDiv").remove();
+            d3.select("#blanksvg").remove();
+			d3.select("#subsvg2").remove();
+			d3.select("#subsvg3").remove();
+			Draw(path);
+		}
+	});
+	var defaultPath="weibo0.csv";
+	Draw(defaultPath);
+
+
+});
+
+
 /*
 svg.append("line")
 .attr("x1", 100)
